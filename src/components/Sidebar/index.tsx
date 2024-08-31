@@ -16,10 +16,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
   const [sidebarExpanded] = useState(
-    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
+    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true',
   );
 
-  // close on click outside
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  // Close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
       if (!sidebar.current || !trigger.current) return;
@@ -35,7 +41,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     return () => document.removeEventListener('click', clickHandler);
   });
 
-  // close if the esc key is pressed
+  // Close if the ESC key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
       if (!sidebarOpen || keyCode !== 27) return;
@@ -57,8 +63,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   return (
     <aside
       ref={sidebar}
-      className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+      className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
@@ -102,11 +109,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Dashboard --> */}
               <li>
                 <NavLink
-                  to="/Dashboard"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname === '/' || pathname.includes('dashboard')
+                  to="/dashboard"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname === '/' || pathname.includes('dashboard')
                       ? 'bg-graydark dark:bg-meta-4'
                       : ''
-                    }`}
+                  }`}
                 >
                   <svg
                     className="fill-current"
@@ -138,13 +146,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               {/* <!-- Menu Item Dashboard --> */}
 
-
               {/* <!-- Menu Item Profile --> */}
               <li>
                 <NavLink
                   to="/profile"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes('profile') && 'bg-graydark dark:bg-meta-4'
-                    }`}
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes('profile') && 'bg-graydark dark:bg-meta-4'
+                  }`}
                 >
                   <svg
                     className="fill-current"
@@ -168,50 +176,169 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               {/* <!-- Menu Item Profile --> */}
 
-              {/* <!-- Menu Item Tables --> */}
-              <li>
+              {/* <!-- Menu Item Audit --> */}
+              <li className="group">
                 <NavLink
-                  to="/tables"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes('tables') && 'bg-graydark dark:bg-meta-4'
-                    }`}
+                  to="#"
+                  className={`relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes('audit-overview') &&
+                    'bg-graydark dark:bg-meta-4'
+                  }`}
+                  onClick={toggleDropdown}
                 >
                   <svg
                     className="fill-current"
                     width="18"
-                    height="19"
-                    viewBox="0 0 18 19"
+                    height="18"
+                    viewBox="0 0 28 28"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <g clipPath="url(#clip0_130_9756)">
-                      <path
-                        d="M15.7501 0.55835H2.2501C1.29385 0.55835 0.506348 1.34585 0.506348 2.3021V15.8021C0.506348 16.7584 1.29385 17.574 2.27822 17.574H15.7782C16.7345 17.574 17.5501 16.7865 17.5501 15.8021V2.3021C17.522 1.34585 16.7063 0.55835 15.7501 0.55835ZM6.69385 10.599V6.4646H11.3063V10.5709H6.69385V10.599ZM11.3063 11.8646V16.3083H6.69385V11.8646H11.3063ZM1.77197 6.4646H5.45635V10.5709H1.77197V6.4646ZM12.572 6.4646H16.2563V10.5709H12.572V6.4646ZM2.2501 1.82397H15.7501C16.0313 1.82397 16.2563 2.04897 16.2563 2.33022V5.2271H1.77197V2.3021C1.77197 2.02085 1.96885 1.82397 2.2501 1.82397ZM1.77197 15.8021V11.8646H5.45635V16.3083H2.2501C1.96885 16.3083 1.77197 16.0834 1.77197 15.8021ZM15.7501 16.3083H12.572V11.8646H16.2563V15.8021C16.2563 16.0834 16.0313 16.3083 15.7501 16.3083Z"
-                        fill=""
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_130_9756">
-                        <rect
+                    <path
+                      d="M14 2.33337C7.92857 2.33337 3 7.26194 3 13.3334C3 19.4048 7.92857 24.3334 14 24.3334C20.0714 24.3334 25 19.4048 25 13.3334C25 7.26194 20.0714 2.33337 14 2.33337ZM14 22.6667C8.95429 22.6667 5 18.7124 5 13.6667C5 8.62099 8.95429 4.66671 14 4.66671C19.0457 4.66671 23 8.62099 23 13.6667C23 18.7124 19.0457 22.6667 14 22.6667Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M14 6.83337C13.6714 6.83337 13.4167 7.08811 13.4167 7.41671V13.6667C13.4167 13.9953 13.6714 14.25 14 14.25C14.3286 14.25 14.5833 13.9953 14.5833 13.6667V7.41671C14.5833 7.08811 14.3286 6.83337 14 6.83337Z"
+                      fill="white"
+                    />
+                    <path
+                      d="M18.25 16.5C17.9214 16.5 17.6667 16.7547 17.6667 17.0834C17.6667 17.412 17.9214 17.6667 18.25 17.6667C18.5786 17.6667 18.8333 17.412 18.8333 17.0834C18.8333 16.7547 18.5786 16.5 18.25 16.5Z"
+                      fill="white"
+                    />
+                  </svg>
+                  Audit Overview
+                  <svg
+                    className={`ml-auto transition-transform duration-300 ${
+                      isDropdownOpen ? 'rotate-180' : ''
+                    }`}
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.29289 9.70711C8.68342 9.31658 9.31658 9.31658 9.70711 9.70711L12 12L14.2929 9.70711C14.6834 9.31658 15.3166 9.31658 15.7071 9.70711C16.0976 10.0976 16.0976 10.7308 15.7071 11.1213L12.7071 14.1213C12.3166 14.5118 11.6834 14.5118 11.2929 14.1213L8.29289 11.1213C7.90237 10.7308 7.90237 10.0976 8.29289 9.70711Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </NavLink>
+
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <ul className="ml-4 mt-2 space-y-2">
+                    <li>
+                      <NavLink
+                        to="/audit/new"
+                        className={`relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                          pathname.includes('audit/new') &&
+                          'bg-graydark dark:bg-meta-4'
+                        }`}
+                      >
+                        <svg
+                          className="fill-current"
                           width="18"
                           height="18"
-                          fill="white"
-                          transform="translate(0 0.052124)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg>
-                  Tables
-                </NavLink>
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12 4V12H4V14H12V22H14V14H22V12H14V4H12Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        Add New Audit
+                      </NavLink>
+                    </li>
+
+                    <li>
+                      <NavLink
+                        to="/audit/projects"
+                        className={`relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                          pathname.includes('audit/projects') &&
+                          'bg-graydark dark:bg-meta-4'
+                        }`}
+                      >
+                        <svg
+                          className="fill-current"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M3 5H5V19H3V5ZM19 19H21V5H19V19ZM8 19V5H16V19H8Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        Manage Audit Projects
+                      </NavLink>
+                    </li>
+
+                    <li>
+                      <NavLink
+                        to="/audit/assignments"
+                        className={`relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                          pathname.includes('audit/assignments') &&
+                          'bg-graydark dark:bg-meta-4'
+                        }`}
+                      >
+                        <svg
+                          className="fill-current"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10.5 4C9.67157 4 9 4.67157 9 5.5C9 6.32843 9.67157 7 10.5 7H14.5C15.3284 7 16 6.32843 16 5.5C16 4.67157 15.3284 4 14.5 4H10.5ZM7 5.5C7 3.567 8.567 2 10.5 2H14.5C16.433 2 18 3.567 18 5.5C18 7.433 16.433 9 14.5 9H10.5C8.567 9 7 7.433 7 5.5ZM10.5 12C9.67157 12 9 12.6716 9 13.5C9 14.3284 9.67157 15 10.5 15H14.5C15.3284 15 16 14.3284 16 13.5C16 12.6716 15.3284 12 14.5 12H10.5ZM7 13.5C7 11.567 8.567 10 10.5 10H14.5C16.433 10 18 11.567 18 13.5C18 15.433 16.433 17 14.5 17H10.5C8.567 17 7 15.433 7 13.5ZM10.5 20C9.67157 20 9 20.6716 9 21.5C9 22.3284 9.67157 23 10.5 23H14.5C15.3284 23 16 22.3284 16 21.5C16 20.6716 15.3284 20 14.5 20H10.5ZM7 21.5C7 19.567 8.567 18 10.5 18H14.5C16.433 18 18 19.567 18 21.5C18 23.433 16.433 25 14.5 25H10.5C8.567 25 7 23.433 7 21.5Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        Assignments & Roles
+                      </NavLink>
+                    </li>
+
+                    <li>
+                      <NavLink
+                        to="/audit/auditSetting"
+                        className={`relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                          pathname.includes('audit/auditSetting') &&
+                          'bg-graydark dark:bg-meta-4'
+                        }`}
+                      >
+                        <svg
+                          className="fill-current"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M19 10C19.5304 10 20.0391 10.2107 20.4142 10.5858C20.7893 10.9609 21 11.4696 21 12C21 12.5304 20.7893 13.0391 20.4142 13.4142C20.0391 13.7893 19.5304 14 19 14C18.4696 14 17.9609 13.7893 17.5858 13.4142C17.2107 13.0391 17 12.5304 17 12C17 11.4696 17.2107 10.9609 17.5858 10.5858C17.9609 10.2107 18.4696 10 19 10ZM12 10C12.5304 10 13.0391 10.2107 13.4142 10.5858C13.7893 10.9609 14 11.4696 14 12C14 12.5304 13.7893 13.0391 13.4142 13.4142C13.0391 13.7893 12.5304 14 12 14C11.4696 14 10.9609 13.7893 10.5858 13.4142C10.2107 13.0391 10 12.5304 10 12C10 11.4696 10.2107 10.9609 10.5858 10.5858C10.9609 10.2107 11.4696 10 12 10ZM5 10C5.53043 10 6.03914 10.2107 6.41421 10.5858C6.78929 10.9609 7 11.4696 7 12C7 12.5304 6.78929 13.0391 6.41421 13.4142C6.03914 13.7893 5.53043 14 5 14C4.46957 14 3.96086 13.7893 3.58579 13.4142C3.21071 13.0391 3 12.5304 3 12C3 11.4696 3.21071 10.9609 3.58579 10.5858C3.96086 10.2107 4.46957 10 5 10ZM5 4H19C19.5304 4 20.0391 4.21071 20.4142 4.58579C20.7893 4.96086 21 5.46957 21 6C21 6.53043 20.7893 7.03914 20.4142 7.41421C20.0391 7.78929 19.5304 8 19 8H5C4.46957 8 3.96086 7.78929 3.58579 7.41421C3.21071 7.03914 3 6.53043 3 6C3 5.46957 3.21071 4.96086 3.58579 4.58579C3.96086 4.21071 4.46957 4 5 4ZM5 16H19C19.5304 16 20.0391 16.2107 20.4142 16.5858C20.7893 16.9609 21 17.4696 21 18C21 18.5304 20.7893 19.0391 20.4142 19.4142C20.0391 19.7893 19.5304 20 19 20H5C4.46957 20 3.96086 19.7893 3.58579 19.4142C3.21071 19.0391 3 18.5304 3 18C3 17.4696 3.21071 16.9609 3.58579 16.5858C3.96086 16.2107 4.46957 16 5 16Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        Audit Settings
+                      </NavLink>
+                    </li>
+                  </ul>
+                )}
               </li>
-              {/* <!-- Menu Item Tables --> */}
 
               {/* <!-- Menu Item Settings --> */}
               <li>
                 <NavLink
                   to="/settings"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes('settings') &&
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes('settings') &&
                     'bg-graydark dark:bg-meta-4'
-                    }`}
+                  }`}
                 >
                   <svg
                     className="fill-current"

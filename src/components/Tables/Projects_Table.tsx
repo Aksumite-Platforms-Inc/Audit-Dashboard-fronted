@@ -105,7 +105,7 @@ const OrganizationAuditTable = () => {
       </div>
 
       {/* Tabs Section */}
-      <div className="p-6">
+      {/* <div className="p-6">
         <button
           className={`px-4 py-2 mr-2 ${
             activeTab === 'Private' ? 'bg-blue-500 text-white' : 'bg-gray-200'
@@ -122,7 +122,7 @@ const OrganizationAuditTable = () => {
         >
           Governmental
         </button>
-      </div>
+      </div> */}
 
       {/* Filters Section */}
       <div className="p-6 grid grid-cols-1 md:grid-cols-4 gap-4">

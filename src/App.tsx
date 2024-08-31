@@ -10,6 +10,11 @@ import Settings from './pages/Settings';
 import Tables from './pages/Tables';
 import DefaultLayout from './layout/DefaultLayout';
 import AuditDashBoard from './pages/Dashboard/AuditDahsBoard';
+import NewAudit from './pages/Audit/NewAudit';
+import AuditProjects from './pages/Audit/ManageAuditProjects';
+import AuditAssignments from './pages/Audit/AuditAssignments';
+import AuditSettings from './pages/Audit/AuditSetting';
+import Sidebar from './components/Sidebar'; // Adjust the path as needed
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -28,15 +33,19 @@ function App() {
   ) : (
     <DefaultLayout>
       <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <PageTitle title="Audit Dashboard | INSA" />
-                <AuditDashBoard />
-              </>
-            }
-          />
+        <Route path="/audit/new" element={<NewAudit />} />
+        <Route path="/audit/projects" element={<AuditProjects />} />
+        <Route path="/audit/assignments" element={<AuditAssignments />} />
+        <Route path="/audit/auditSetting" element={<AuditSettings />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <PageTitle title="Audit Dashboard | INSA" />
+              <AuditDashBoard />
+            </>
+          }
+        />
         <Route
           path="/Dashboard"
           element={
@@ -51,7 +60,7 @@ function App() {
           element={
             <>
               <PageTitle title="Profile | Audit Dashboard | INSA" />
-              <Profile user={undefined} projects={undefined}/>
+              <Profile user={undefined} projects={undefined} />
             </>
           }
         />

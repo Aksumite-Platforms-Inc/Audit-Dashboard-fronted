@@ -28,12 +28,39 @@ const SignIn: React.FC = () => {
         throw new Error("Failed to login");
       }
 
-      const token = await response.text(); // Expecting a plain text response (the token)
-      localStorage.setItem("authToken", token); // Store the token in localStorage
-      navigate("/dashboard"); // Redirect to the dashboard page
+
+      const token = await response.text(); // Expecting the token as a plain string
+      // If your backend sends the token with a "Bearer " prefix, remove it
+      const actualToken = token.startsWith("Bearer ") ? token.slice(7) : token;
+
+      localStorage.setItem('token', actualToken);
+
+      const role = parseJwt(actualToken).role;
+      if (role === 'ADMIN') {
+        navigate('/dashboard');
+      } else {
+        navigate('/');
+      }
+
+
+     // const token = await response.text(); // Expecting a plain text response (the token)
+      //localStorage.setItem("authToken", token); // Store the token in localStorage
+      //navigate("/dashboard"); // Redirect to the dashboard page
     } catch (err) {
       setError('An error occurred. Please try again.');
     }
+   
+  
+      
+  };
+  const parseJwt = (token: string) => {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
   };
   return (
     <>

@@ -5,60 +5,55 @@ import AuditLogManagement from './AuditLogManagement';
 import SystemSettings from './SystemSettings';
 
 const Admin: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>('dropdown');
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'dropdown':
-        return <DropdownManagement />;
-      case 'user':
-        return <UserManagement />;
-      case 'auditlog':
-        return <AuditLogManagement />;
-      case 'system':
-        return <SystemSettings />;
-      default:
-        return null;
-    }
-  };
+  const [activeTab, setActiveTab] = useState('DropdownManagement');
 
   return (
-    <div className="p-4">
-      <div className="flex space-x-4 border-b border-gray-200">
+    <div className="p-6">
+      <div className="mb-4 flex space-x-4">
         <button
-          onClick={() => setActiveTab('dropdown')}
-          className={`py-2 px-4 ${
-            activeTab === 'dropdown' ? 'border-b-2 border-blue-500' : ''
+          className={`${
+            activeTab === 'DropdownManagement'
+              ? 'border-b-2 border-blue-500'
+              : ''
           }`}
+          onClick={() => setActiveTab('DropdownManagement')}
         >
           Dropdown Management
         </button>
         <button
-          onClick={() => setActiveTab('user')}
-          className={`py-2 px-4 ${
-            activeTab === 'user' ? 'border-b-2 border-blue-500' : ''
+          className={`${
+            activeTab === 'UserManagement' ? 'border-b-2 border-blue-500' : ''
           }`}
+          onClick={() => setActiveTab('UserManagement')}
         >
           User Management
         </button>
         <button
-          onClick={() => setActiveTab('auditlog')}
-          className={`py-2 px-4 ${
-            activeTab === 'auditlog' ? 'border-b-2 border-blue-500' : ''
+          className={`${
+            activeTab === 'AuditLogManagement'
+              ? 'border-b-2 border-blue-500'
+              : ''
           }`}
+          onClick={() => setActiveTab('AuditLogManagement')}
         >
           Audit Log Management
         </button>
         <button
-          onClick={() => setActiveTab('system')}
-          className={`py-2 px-4 ${
-            activeTab === 'system' ? 'border-b-2 border-blue-500' : ''
+          className={`${
+            activeTab === 'SystemSettings' ? 'border-b-2 border-blue-500' : ''
           }`}
+          onClick={() => setActiveTab('SystemSettings')}
         >
           System Settings
         </button>
       </div>
-      <div className="mt-4">{renderContent()}</div>
+
+      <div className="mt-4">
+        {activeTab === 'DropdownManagement' && <DropdownManagement />}
+        {activeTab === 'UserManagement' && <UserManagement />}
+        {activeTab === 'AuditLogManagement' && <AuditLogManagement />}
+        {activeTab === 'SystemSettings' && <SystemSettings />}
+      </div>
     </div>
   );
 };

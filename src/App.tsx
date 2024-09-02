@@ -15,7 +15,7 @@ import AuditProjects from './pages/Audit/ManageAuditProjects';
 import AuditAssignments from './pages/Audit/AuditAssignments';
 import AuditSettings from './pages/Audit/AuditSetting';
 import Sidebar from './components/Sidebar'; // Adjust the path as needed
-import Admin from './pages/Admin';
+import Admin from './pages/Admin/Admin';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);

@@ -53,7 +53,7 @@ const NewAudit: React.FC = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className="block mb-2">Organization</label>
+          <label className="block mb-2">Organization Name</label>
           <input
             type="text"
             value={organization}
@@ -65,7 +65,7 @@ const NewAudit: React.FC = () => {
         <div className="mb-4">
           <Dropdown
             label="Organization Type"
-            options={['Private', 'Public']}
+            options={['Private', 'Governmental']}
             onChange={(value: string) =>
               setOrganizationType(value as OrganizationType)
             }
@@ -76,38 +76,42 @@ const NewAudit: React.FC = () => {
         <div className="mb-4">
           <Dropdown
             label="Audit Type"
-            options={['Cyber Products', 'Network Infrastructure', 'Compliance']}
+            options={[
+              'WebSite',
+              'Network Infrastructure',
+              'Mobile Application',
+            ]}
             onChange={(value: string) => setAuditType(value as AuditType)}
             value={''}
           />
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <Dropdown
             label="Risk Level"
             options={['High', 'Medium', 'Low']}
             onChange={(value: string) => setRiskLevel(value as RiskLevel)}
             value={''}
           />
-        </div>
+        </div> */}
 
-        <div className="mb-4">
-          <label className="block mb-2">Findings</label>
-          <textarea
+        {/* <div className="mb-4"> */}
+        {/* <label className="block mb-2">Findings</label> */}
+        {/* <textarea
             value={findings}
             onChange={(e) => setFindings(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
+          /> */}
+        {/* </div> */}
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block mb-2">Recommendations</label>
           <textarea
             value={recommendations}
             onChange={(e) => setRecommendations(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
           />
-        </div>
+        </div> */}
 
         <div className="mb-4">
           <label className="block mb-2">Auditor</label>

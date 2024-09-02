@@ -196,7 +196,9 @@ const Settings = () => {
                   <span className="text-primary">Click to upload</span> or drag
                   and drop
                 </p>
-                <p className="mt-1 text-xs">SVG, PNG, JPG or GIF (max, 800 X 800px)</p>
+                <p className="mt-1 text-xs">
+                  SVG, PNG, JPG or GIF (max, 800 X 800px)
+                </p>
               </div>
             </div>
 

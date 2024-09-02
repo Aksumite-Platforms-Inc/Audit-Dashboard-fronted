@@ -15,6 +15,7 @@ import AuditProjects from './pages/Audit/ManageAuditProjects';
 import AuditAssignments from './pages/Audit/AuditAssignments';
 import AuditSettings from './pages/Audit/AuditSetting';
 import Sidebar from './components/Sidebar'; // Adjust the path as needed
+import Admin from './pages/Admin';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -37,6 +38,7 @@ function App() {
         <Route path="/audit/projects" element={<AuditProjects />} />
         <Route path="/audit/assignments" element={<AuditAssignments />} />
         <Route path="/audit/auditSetting" element={<AuditSettings />} />
+        <Route path="/admin" element={<Admin />} />
         <Route
           path="/"
           element={

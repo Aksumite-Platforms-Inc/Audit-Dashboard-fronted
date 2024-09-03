@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
 import Loader from './common/Loader';
@@ -8,17 +8,20 @@ import SignIn from './pages/Authentication/SignIn';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Tables from './pages/Tables';
-import DefaultLayout from './layout/DefaultLayout';
+import AuthenticatedLayout from './layout/AuthenticatedLayout';
+import UnauthenticatedLayout from './layout/unAuthanticatedLayout';
 import AuditDashBoard from './pages/Dashboard/AuditDahsBoard';
 import NewAudit from './pages/Audit/NewAudit';
 import AuditProjects from './pages/Audit/ManageAuditProjects';
 import AuditAssignments from './pages/Audit/AuditAssignments';
-import AuditSettings from './pages/Audit/AuditSetting';// Adjust the path as needed
+import AuditSettings from './pages/Audit/AuditSetting'; // Adjust the path as needed
 import Admin from './pages/Admin/Admin';
+import { AuthContext } from './context/AuthContext'; // Assuming you have an AuthContext
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
+  const { isAuthenticated } = useContext(AuthContext) || {}; // Get authentication state from context
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -28,83 +31,111 @@ function App() {
     setTimeout(() => setLoading(false), 1000);
   }, []);
 
-  return loading ? (
-    <Loader />
-  ) : (
-    <DefaultLayout>
-      <Routes>
-        <Route path="/audit/new" element={<NewAudit />} />
-        <Route path="/audit/projects" element={<AuditProjects />} />
-        <Route path="/audit/assignments" element={<AuditAssignments />} />
-        <Route path="/audit/auditSetting" element={<AuditSettings />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/"
-        element={
-          <>
-              <PageTitle title="Audit Dashboard | INSA" />
-              <AuditDashBoard />
-            </>
-          }
-        />
-        <Route path="/dashboard"
-          element={
-            <>
-              <PageTitle title="Audit Dashboard | INSA" />
-              <AuditDashBoard />
-            </>
-          }
-        />
-        <Route  path="/Dashboard"
-          element={
-            <>
-              <PageTitle title="Audit Dashboard | INSA" />
-              <AuditDashBoard />
-            </>
-          }
-        />
-        <Route  path="/profile"
-          element={
-            <>
-              <PageTitle title="Profile | Audit Dashboard | INSA" />
-              <Profile />
-            </>
-          }
-        />
-        <Route path="/tables"
-          element={
-            <>
-              <PageTitle title="Tables | Audit Dashboard | INSA" />
-              <Tables />
-            </>
-          }
-        />
-        <Route  path="/settings"
-          element={
-            <>
-              <PageTitle title="Settings | Audit Dashboard | INSA" />
-              <Settings />
-            </>
-          }
-        />
-        <Route  path="/auth/signin"
-          element={
-            <>
-              <PageTitle title="Signin | Audit Dashboard | INSA" />
-              <SignIn />
-            </>
-          }
-        />
+  if (loading) {
+    return <Loader />;
+  }
 
-        <Route  path="/auth/signup"
+  return (
+    <Routes>
+      {isAuthenticated ? (
+        <Route
+          path="*"
           element={
-            <>
-              <PageTitle title="Signup | Audit Dashboard | INSA" />
-              <SignUp />
-            </>
+            <AuthenticatedLayout>
+              <Routes>
+                <Route path="/audit/new" element={<NewAudit />} />
+                <Route path="/audit/projects" element={<AuditProjects />} />
+                <Route path="/audit/assignments" element={<AuditAssignments />} />
+                <Route path="/audit/auditSetting" element={<AuditSettings />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route
+                  path="/"
+                  element={
+                    <>
+                      <PageTitle title="Audit Dashboard | INSA" />
+                      <AuditDashBoard />
+                    </>
+                  }
+                />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <>
+                      <PageTitle title="Audit Dashboard | INSA" />
+                      <AuditDashBoard />
+                    </>
+                  }
+                />
+                <Route
+                  path="/Dashboard"
+                  element={
+                    <>
+                      <PageTitle title="Audit Dashboard | INSA" />
+                      <AuditDashBoard />
+                    </>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <>
+                      <PageTitle title="Profile | Audit Dashboard | INSA" />
+                      <Profile />
+                    </>
+                  }
+                />
+                <Route
+                  path="/tables"
+                  element={
+                    <>
+                      <PageTitle title="Tables | Audit Dashboard | INSA" />
+                      <Tables />
+                    </>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <>
+                      <PageTitle title="Settings | Audit Dashboard | INSA" />
+                      <Settings />
+                    </>
+                  }
+                />
+              </Routes>
+            </AuthenticatedLayout>
           }
         />
-      </Routes>
-    </DefaultLayout>
+      ) : (
+        <Route
+          path="*"
+          element={
+            <UnauthenticatedLayout>
+              <Routes>
+                <Route
+                  path="/auth/signin"
+                  element={
+                    <>
+                      <PageTitle title="Signin | Audit Dashboard | INSA" />
+                      <SignIn />
+                    </>
+                  }
+                />
+                <Route
+                  path="/auth/signup"
+                  element={
+                    <>
+                      <PageTitle title="Signup | Audit Dashboard | INSA" />
+                      <SignUp />
+                    </>
+                  }
+                />
+              </Routes>
+            </UnauthenticatedLayout>
+          }
+        />
+      )}
+    </Routes>
   );
 }
 

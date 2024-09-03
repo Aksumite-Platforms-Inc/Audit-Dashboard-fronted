@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
@@ -13,8 +13,7 @@ import AuditDashBoard from './pages/Dashboard/AuditDahsBoard';
 import NewAudit from './pages/Audit/NewAudit';
 import AuditProjects from './pages/Audit/ManageAuditProjects';
 import AuditAssignments from './pages/Audit/AuditAssignments';
-import AuditSettings from './pages/Audit/AuditSetting';
-import Sidebar from './components/Sidebar'; // Adjust the path as needed
+import AuditSettings from './pages/Audit/AuditSetting';// Adjust the path as needed
 import Admin from './pages/Admin/Admin';
 
 function App() {
@@ -39,8 +38,15 @@ function App() {
         <Route path="/audit/assignments" element={<AuditAssignments />} />
         <Route path="/audit/auditSetting" element={<AuditSettings />} />
         <Route path="/admin" element={<Admin />} />
-        <Route
-          path="/"
+        <Route path="/"
+        element={
+          <>
+              <PageTitle title="Audit Dashboard | INSA" />
+              <AuditDashBoard />
+            </>
+          }
+        />
+        <Route path="/dashboard"
           element={
             <>
               <PageTitle title="Audit Dashboard | INSA" />
@@ -48,26 +54,7 @@ function App() {
             </>
           }
         />
-      <Route
-       path="/"
-       element={<Navigate to="/auth/signin" replace />
-        
-       }
-       
-          
-          
-        />
-          <Route
-            path="/dashboard"
-            element={
-              <>
-                <PageTitle title="Audit Dashboard | INSA" />
-                <AuditDashBoard />
-              </>
-            }
-          />
-        <Route
-          path="/Dashboard"
+        <Route  path="/Dashboard"
           element={
             <>
               <PageTitle title="Audit Dashboard | INSA" />
@@ -75,17 +62,15 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/profile"
+        <Route  path="/profile"
           element={
             <>
               <PageTitle title="Profile | Audit Dashboard | INSA" />
-              <Profile user={undefined} projects={undefined} />
+              <Profile />
             </>
           }
         />
-        <Route
-          path="/tables"
+        <Route path="/tables"
           element={
             <>
               <PageTitle title="Tables | Audit Dashboard | INSA" />
@@ -93,8 +78,7 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/settings"
+        <Route  path="/settings"
           element={
             <>
               <PageTitle title="Settings | Audit Dashboard | INSA" />
@@ -102,8 +86,7 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/auth/signin"
+        <Route  path="/auth/signin"
           element={
             <>
               <PageTitle title="Signin | Audit Dashboard | INSA" />
@@ -111,9 +94,8 @@ function App() {
             </>
           }
         />
-        
-        <Route
-          path="/auth/signup"
+
+        <Route  path="/auth/signup"
           element={
             <>
               <PageTitle title="Signup | Audit Dashboard | INSA" />

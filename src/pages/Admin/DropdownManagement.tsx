@@ -136,7 +136,7 @@ const DropdownManagement: React.FC = () => {
             onClick={handleAddAuditType}
             className="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            Add Audit Type
+            Add
           </button>
         </div>
       </div>
@@ -172,7 +172,7 @@ const DropdownManagement: React.FC = () => {
             onClick={handleAddRiskLevel}
             className="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            Add Risk Level
+            Add
           </button>
         </div>
       </div>
@@ -208,7 +208,7 @@ const DropdownManagement: React.FC = () => {
             onClick={handleAddOrganizationType}
             className="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            Add Organization Type
+            Add
           </button>
         </div>
       </div>

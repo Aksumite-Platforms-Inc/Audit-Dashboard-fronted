@@ -78,7 +78,7 @@ const UserManagement: React.FC = () => {
           onClick={handleAddUser}
           className="bg-blue-500 text-white px-4 py-2 rounded"
         >
-          Add User
+          Add
         </button>
       </div>
     </div>

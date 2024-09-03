@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
-import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
+import SignIn from './pages/Authentication/SignIn';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Tables from './pages/Tables';
@@ -48,6 +48,24 @@ function App() {
             </>
           }
         />
+      <Route
+       path="/"
+       element={<Navigate to="/auth/signin" replace />
+        
+       }
+       
+          
+          
+        />
+          <Route
+            path="/dashboard"
+            element={
+              <>
+                <PageTitle title="Audit Dashboard | INSA" />
+                <AuditDashBoard />
+              </>
+            }
+          />
         <Route
           path="/Dashboard"
           element={
@@ -93,6 +111,7 @@ function App() {
             </>
           }
         />
+        
         <Route
           path="/auth/signup"
           element={

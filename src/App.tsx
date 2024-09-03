@@ -16,6 +16,11 @@ import AuditAssignments from './pages/Audit/AuditAssignments';
 import AuditSettings from './pages/Audit/AuditSetting';
 import Sidebar from './components/Sidebar'; // Adjust the path as needed
 import Admin from './pages/Admin/Admin';
+import ReportGeneration from './pages/Report/ReportGeneration';
+import DailyReport from './pages/Report/DailyReport';
+import WeeklyReport from './pages/Report/WeeklyReport';
+import MonthlyReport from './pages/Report/MonthlyReport';
+import CustomReport from './pages/Report/CustomReport';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,6 +44,12 @@ function App() {
         <Route path="/audit/assignments" element={<AuditAssignments />} />
         <Route path="/audit/auditSetting" element={<AuditSettings />} />
         <Route path="/admin" element={<Admin />} />
+        {/* Report Generation Routes */}
+        <Route path="/report" element={<ReportGeneration />} />
+        <Route path="/report/daily" element={<DailyReport />} />
+        <Route path="/report/weekly" element={<WeeklyReport />} />
+        <Route path="/report/monthly" element={<MonthlyReport />} />
+        <Route path="/report/custom" element={<CustomReport />} />
         <Route
           path="/"
           element={
@@ -62,7 +73,8 @@ function App() {
           element={
             <>
               <PageTitle title="Profile | Audit Dashboard | INSA" />
-              <Profile user={undefined} projects={undefined} />
+              <Profile />
+              {/* <Profile user={undefined} projects={undefined} /> */}
             </>
           }
         />

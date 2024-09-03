@@ -45,7 +45,7 @@ function App() {
         <Route path="/audit/auditSetting" element={<AuditSettings />} />
         <Route path="/admin" element={<Admin />} />
         {/* Report Generation Routes */}
-        <Route path="/report" element={<ReportGeneration />} />
+        <Route path="/ReportGeneration" element={<ReportGeneration />} />
         <Route path="/report/daily" element={<DailyReport />} />
         <Route path="/report/weekly" element={<WeeklyReport />} />
         <Route path="/report/monthly" element={<MonthlyReport />} />

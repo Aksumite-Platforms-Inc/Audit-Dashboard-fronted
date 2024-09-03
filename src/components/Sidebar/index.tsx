@@ -365,8 +365,32 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </ul>
                 )}
               </li>
-
-              {/* <!-- Menu Item Settings --> */}
+              <li className="group">
+                <NavLink
+                  to="/ReportGeneration"
+                  className={`relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes('ReportGeneration')
+                      ? 'bg-graydark dark:bg-meta-4'
+                      : ''
+                  }`}
+                >
+                  <svg
+                    className="fill-current"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.58 20 4 16.42 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20ZM16.59 7.41L12 12L7.41 7.41L6 8.83L12 14.83L18 8.83L16.59 7.41Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  Reports
+                </NavLink>
+              </li>
+              {/* <!-- Menu Item admin --> */}
               <li>
                 <NavLink
                   to="/admin"
@@ -406,81 +430,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Administration
                 </NavLink>
               </li>
-              {/* <!-- Menu Item Settings --> */}
-              <li className="group">
-                <button
-                  onClick={() => setIsReportDropdownOpen(!isReportDropdownOpen)}
-                  className={`flex items-center justify-between w-full py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('report') && 'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <span>Report Generation</span>
-                  <svg
-                    className={`ml-auto transition-transform duration-300 ${
-                      isReportDropdownOpen ? 'rotate-180' : ''
-                    }`}
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M8.29289 9.70711C8.68342 9.31658 9.31658 9.31658 9.70711 9.70711L12 12L14.2929 9.70711C14.6834 9.31658 15.3166 9.31658 15.7071 9.70711C16.0976 10.0976 16.0976 10.7308 15.7071 11.1213L12.7071 14.1213C12.3166 14.5118 11.6834 14.5118 11.2929 14.1213L8.29289 11.1213C7.90237 10.7308 7.90237 10.0976 8.29289 9.70711Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </button>
-
-                {isReportDropdownOpen && (
-                  <ul className="ml-4 mt-2 space-y-2">
-                    <li>
-                      <NavLink
-                        to="/report/daily"
-                        className={`flex items-center gap-2.5 py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          pathname.includes('report/daily') &&
-                          'bg-graydark dark:bg-meta-4'
-                        }`}
-                      >
-                        Daily Reports
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        to="/report/weekly"
-                        className={`flex items-center gap-2.5 py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          pathname.includes('report/weekly') &&
-                          'bg-graydark dark:bg-meta-4'
-                        }`}
-                      >
-                        Weekly Reports
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        to="/report/monthly"
-                        className={`flex items-center gap-2.5 py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          pathname.includes('report/monthly') &&
-                          'bg-graydark dark:bg-meta-4'
-                        }`}
-                      >
-                        Monthly Reports
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        to="/report/custom"
-                        className={`flex items-center gap-2.5 py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          pathname.includes('report/custom') &&
-                          'bg-graydark dark:bg-meta-4'
-                        }`}
-                      >
-                        Custom Reports
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
-              </li>
+              {/* <!-- Menu Item admin --> */}
             </ul>
           </div>
 

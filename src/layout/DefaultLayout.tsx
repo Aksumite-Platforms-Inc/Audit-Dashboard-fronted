@@ -1,8 +1,8 @@
 import React, { useState, ReactNode, useContext } from 'react';
 import Header from '../components/Header/index';
 import Sidebar from '../components/Sidebar/index';
-import LoginPage from '../pages/Authentication/SignIn'; // Assuming you have a LoginPage component
-import { AuthContext } from '../context/AuthContext'; // Assuming you have an AuthContext
+import LoginPage from '../pages/Authentication/SignIn';
+import { AuthContext } from '../context/AuthContext';
 
 const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

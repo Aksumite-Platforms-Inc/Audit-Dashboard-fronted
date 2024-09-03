@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
@@ -102,6 +102,7 @@ function App() {
                     </>
                   }
                 />
+                <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             </AuthenticatedLayout>
           }
@@ -121,7 +122,7 @@ function App() {
                     </>
                   }
                 />
-                <Route
+                {/* <Route
                   path="/auth/signup"
                   element={
                     <>
@@ -129,7 +130,8 @@ function App() {
                       <SignUp />
                     </>
                   }
-                />
+                /> */}
+                <Route path="*" element={<Navigate to="/auth/signin" />} />
               </Routes>
             </UnauthenticatedLayout>
           }

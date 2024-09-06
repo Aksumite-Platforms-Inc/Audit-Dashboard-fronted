@@ -1,9 +1,9 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
-import SignUp from './pages/Authentication/SignUp';
+// import SignUp from './pages/Authentication/SignUp';
 import SignIn from './pages/Authentication/SignIn';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
@@ -16,12 +16,12 @@ import AuditProjects from './pages/Audit/ManageAuditProjects';
 import AuditAssignments from './pages/Audit/AuditAssignments';
 import AuditSettings from './pages/Audit/AuditSetting'; // Adjust the path as needed
 import Admin from './pages/Admin/Admin';
-import { AuthContext } from './context/AuthContext'; // Assuming you have an AuthContext
+import { useAuth } from './context/AuthContext'; // Assuming you have an AuthContext
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
-  const { isAuthenticated } = useContext(AuthContext) || {}; // Get authentication state from context
+  const { isAuthenticated } = useAuth(); // Get authentication state from context
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -37,7 +37,7 @@ function App() {
 
   return (
     <Routes>
-      {isAuthenticated ? (
+      {!isAuthenticated ? (
         <Route
           path="*"
           element={

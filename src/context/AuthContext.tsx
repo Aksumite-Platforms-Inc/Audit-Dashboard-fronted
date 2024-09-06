@@ -38,13 +38,13 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     );
 };
 
-// Create a custom hook to use the AuthContext
-const useAuth = () => {
+// Create a custom hook to use the AuthContext safely
+const useAuth = (): AuthContextType => {
     const context = useContext(AuthContext);
-    if (context === undefined) {
+    if (!context) {
         throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;
 };
 
-export { AuthProvider, useAuth, AuthContext };
+export { AuthProvider, useAuth };

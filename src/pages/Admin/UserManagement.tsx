@@ -84,68 +84,79 @@ const UserManagement: React.FC = () => {
       </button>
 
       {/* Edit User Modal */}
-      {showModal && editUser && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <h3 className="text-lg font-semibold mb-4">Edit User</h3>
+{showModal && editUser && (
+  <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+      <h3 className="text-lg font-semibold mb-4">Edit User</h3>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Name</label>
-              <input
-                type="text"
-                value={editUser.name}
-                onChange={(e) => setEditUser({ ...editUser, name: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Name</label>
+        <input
+          type="text"
+          value={editUser.name}
+          onChange={(e) => setEditUser({ ...editUser, name: e.target.value })}
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <input
-                type="email"
-                value={editUser.email}
-                onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          type="email"
+          value={editUser.email}
+          onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Role</label>
-              <input
-                type="text"
-                value={editUser.role}
-                onChange={(e) => setEditUser({ ...editUser, role: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Role</label>
+        <select
+          value={editUser.role}
+          onChange={(e) => setEditUser({ ...editUser, role: e.target.value })}
+          className="w-full p-2 border border-gray-300 rounded"
+        >
+          <option value="Admin">Admin</option>
+          <option value="Expert">Expert</option>
+        </select>
+      </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Expertise</label>
-              <input
-                type="text"
-                value={editUser.expertise}
-                onChange={(e) => setEditUser({ ...editUser, expertise: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
-
-            <div className="flex justify-end">
-              <button
-                onClick={handleSaveUser}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setShowModal(false)}
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
+      {/* Conditionally show Expertise field if role is Expert */}
+      {editUser.role === 'Expert' && (
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Expertise</label>
+          <select
+            value={editUser.expertise}
+            onChange={(e) => setEditUser({ ...editUser, expertise: e.target.value })}
+            className="w-full p-2 border border-gray-300 rounded"
+          >
+            <option value="">Select Expertise</option>
+            <option value="Forensic">Forensic</option>
+            <option value="Malware Analysis">Malware Analysis</option>
+            <option value="Network Security">Network Security</option>
+            <option value="Incident Response">Incident Response</option>
+          </select>
         </div>
       )}
+
+      <div className="flex justify-end">
+        <button
+          onClick={handleSaveUser}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2"
+        >
+          Save
+        </button>
+        <button
+          onClick={() => setShowModal(false)}
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

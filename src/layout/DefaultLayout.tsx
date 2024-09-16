@@ -1,12 +1,12 @@
-import React, { useState, ReactNode, useContext } from 'react';
+import React, { useState, ReactNode } from 'react';
 import Header from '../components/Header/index';
 import Sidebar from '../components/Sidebar/index';
 import LoginPage from '../pages/Authentication/SignIn';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isAuthenticated } = useContext(AuthContext) ?? {}; // Get authentication state from context
+  const { isAuthenticated } = useAuth(); // Get authentication state from context
 
   if (!isAuthenticated) {
     return <LoginPage />; // Render login page if not authenticated

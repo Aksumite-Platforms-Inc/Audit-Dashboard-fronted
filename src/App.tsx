@@ -7,6 +7,8 @@ import SignIn from './pages/Authentication/SignIn';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Tables from './pages/Tables';
+import AuditDetails from './pages/audit-details';
+import OrganizationAuditTable from './components/Tables/OrganizationAuditTable';
 import AuthenticatedLayout from './layout/AuthenticatedLayout';
 import UnauthenticatedLayout from './layout/unAuthanticatedLayout';
 import AuditDashBoard from './pages/Dashboard/AuditDahsBoard';
@@ -102,6 +104,8 @@ function App() {
                   }
                 />
                 <Route path="*" element={<Navigate to="/" />} />
+                <Route path="/" element={<OrganizationAuditTable />} />
+                <Route path="/audit-details/:id" element={<AuditDetails />} />
               </Routes>
             </AuthenticatedLayout>
           }

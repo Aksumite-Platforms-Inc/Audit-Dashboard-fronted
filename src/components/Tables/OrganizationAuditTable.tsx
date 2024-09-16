@@ -135,6 +135,7 @@ const OrganizationAuditTable = () => {
                         value={filters.organizationType}
                         onChange={handleFilterChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                        title="Organization Type"
                     >
                         <option value="">All Types</option>
                         <option value="Private">Private</option>

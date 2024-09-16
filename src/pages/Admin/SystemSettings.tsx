@@ -66,6 +66,7 @@ const SystemSettings: React.FC = () => {
               value={settings[key]}
               onChange={(e) => handleUpdateSetting(key, e.target.value)}
               className="w-full p-2 border border-gray-300 rounded mr-2"
+              title={`Setting value for ${key}`}
             />
             <button
               onClick={() => handleDeleteSetting(key)}

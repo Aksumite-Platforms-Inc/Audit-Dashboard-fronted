@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext, ReactNode, useEffect } from
 // Define the shape of the authentication context
 interface AuthContextType {
     isAuthenticated: boolean;
-    login: () => void;
+    login: (token: string) => void;
     logout: () => void;
 }
 
@@ -14,16 +14,22 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
         // Check local storage for authentication state
-        const storedAuthState = localStorage.getItem('isAuthenticated');
-        return storedAuthState ? JSON.parse(storedAuthState) : false;
+        const token = localStorage.getItem('authToken');
+        return token ? true : false;
     });
 
     useEffect(() => {
         // Persist authentication state in local storage
-        localStorage.setItem('isAuthenticated', JSON.stringify(isAuthenticated));
+        if (isAuthenticated) {
+            localStorage.setItem('isAuthenticated', 'true');
+        } else {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('authToken');
+        }
     }, [isAuthenticated]);
 
-    const login = () => {
+    const login = (token: string) => {
+        localStorage.setItem('authToken', token);
         setIsAuthenticated(true);
     };
 
@@ -47,4 +53,4 @@ const useAuth = (): AuthContextType => {
     return context;
 };
 
-export { AuthProvider, useAuth };
+export { AuthProvider, useAuth};

@@ -3,7 +3,6 @@ import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
-// import SignUp from './pages/Authentication/SignUp';
 import SignIn from './pages/Authentication/SignIn';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
@@ -122,15 +121,6 @@ function App() {
                     </>
                   }
                 />
-                {/* <Route
-                  path="/auth/signup"
-                  element={
-                    <>
-                      <PageTitle title="Signup | Audit Dashboard | INSA" />
-                      <SignUp />
-                    </>
-                  }
-                /> */}
                 <Route path="*" element={<Navigate to="/auth/signin" />} />
               </Routes>
             </UnauthenticatedLayout>

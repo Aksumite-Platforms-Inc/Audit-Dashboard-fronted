@@ -65,7 +65,7 @@ interface PriAuditData {
 
 const DashboardStats = () => {
   const [govauditData, setgovAuditData] = useState<GovAuditData[]>([]);
-  const [priauditData, setpriAuditData] = useState<GovAuditData[]>([]);
+  const [priauditData, setpriAuditData] = useState<PriAuditData[]>([]);
   const [governmentCount, setGovernmentCount] = useState(0);
   const [privateCount, setPrivateCount] = useState(0); // New state for counting government audits
   const [loading, setLoading] = useState(true);

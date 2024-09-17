@@ -1,50 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Dropdown from '../../components/Dropdowns/Dropdown';
-import { AuditType, RiskLevel, OrganizationType } from '../../types';
+import { AuditType, OrganizationType } from '../../types';
+import { addAudit, fetchAuditors } from '../../api/AuditApi';
 
 const NewAudit: React.FC = () => {
   const navigate = useNavigate();
   const [organization, setOrganization] = useState('');
   const [auditType, setAuditType] = useState<AuditType | null>(null);
-  const [riskLevel, setRiskLevel] = useState<RiskLevel | null>(null);
-  const [organizationType, setOrganizationType] =
-    useState<OrganizationType | null>(null);
-  const [findings, setFindings] = useState('');
-  const [recommendations, setRecommendations] = useState('');
+  const [organizationType, setOrganizationType] = useState<OrganizationType | null>(null);
   const [auditor, setAuditor] = useState('');
-  const [auditDate, setAuditDate] = useState('');
+  const [auditors, setAuditors] = useState<string[]>([]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const loadAuditors = async () => {
+      try {
+        const fetchedAuditors = await fetchAuditors();
+        setAuditors(fetchedAuditors);
+      } catch (error) {
+        console.error('Failed to fetch auditors:', error);
+      }
+    };
+
+    loadAuditors();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (
-      !organization ||
-      !auditType ||
-      !riskLevel ||
-      !findings ||
-      !recommendations ||
-      !auditor ||
-      !auditDate ||
-      !organizationType
-    ) {
+    if (!organization || !auditType || !auditor || !organizationType) {
       alert('Please fill in all fields.');
       return;
     }
 
-    // Handle form submission (e.g., API call to save the audit)
-    console.log({
-      organization,
-      organizationType,
-      auditType,
-      riskLevel,
-      findings,
-      recommendations,
-      auditor,
-      auditDate,
-    });
+    try {
+      await addAudit({
+        organization,
+        organizationType,
+        auditType,
+        auditor,
+      });
 
-    navigate('/audit-overview');
+      navigate('/audit-overview');
+    } catch (error) {
+      console.error('Failed to add audit:', error);
+      alert('Failed to add audit. Please try again.');
+    }
   };
 
   return (
@@ -59,6 +60,7 @@ const NewAudit: React.FC = () => {
             value={organization}
             onChange={(e) => setOrganization(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
+            placeholder="Enter organization name"
           />
         </div>
 
@@ -66,77 +68,30 @@ const NewAudit: React.FC = () => {
           <Dropdown
             label="Organization Type"
             options={['Private', 'Governmental']}
-            onChange={(value: string) =>
-              setOrganizationType(value as OrganizationType)
-            }
-            value={''}
+            onChange={(value: string) => setOrganizationType(value as OrganizationType)}
+            value={organizationType || ''}
           />
         </div>
 
         <div className="mb-4">
           <Dropdown
             label="Audit Type"
-            options={[
-              'WebSite',
-              'Network Infrastructure',
-              'Mobile Application',
-            ]}
+            options={['WebSite', 'Network Infrastructure', 'Mobile Application']}
             onChange={(value: string) => setAuditType(value as AuditType)}
-            value={''}
+            value={auditType || ''}
           />
         </div>
 
-        {/* <div className="mb-4">
+        <div className="mb-4">
           <Dropdown
-            label="Risk Level"
-            options={['High', 'Medium', 'Low']}
-            onChange={(value: string) => setRiskLevel(value as RiskLevel)}
-            value={''}
-          />
-        </div> */}
-
-        {/* <div className="mb-4"> */}
-        {/* <label className="block mb-2">Findings</label> */}
-        {/* <textarea
-            value={findings}
-            onChange={(e) => setFindings(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          /> */}
-        {/* </div> */}
-
-        {/* <div className="mb-4">
-          <label className="block mb-2">Recommendations</label>
-          <textarea
-            value={recommendations}
-            onChange={(e) => setRecommendations(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div> */}
-
-        <div className="mb-4">
-          <label className="block mb-2">Auditor</label>
-          <input
-            type="text"
+            label="Auditor"
+            options={auditors}
+            onChange={(value: string) => setAuditor(value)}
             value={auditor}
-            onChange={(e) => setAuditor(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block mb-2">Audit Date</label>
-          <input
-            type="date"
-            value={auditDate}
-            onChange={(e) => setAuditDate(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
           Submit
         </button>
       </form>

@@ -6,4 +6,8 @@ export type AUDIT = {
     recommendations: string;
     auditor: string;
     auditDate: string;
+    lastUpdated: String;
+    status: string;
+    completion: Int32Array;
+    links: string;
 }

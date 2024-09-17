@@ -7,7 +7,7 @@ import SignIn from './pages/Authentication/SignIn';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Tables from './pages/Tables';
-import AuditDetails from './pages/audit-details';
+import AuditDetails from './pages/Audit/audit-details';
 import OrganizationAuditTable from './components/Tables/OrganizationAuditTable';
 import AuthenticatedLayout from './layout/AuthenticatedLayout';
 import UnauthenticatedLayout from './layout/unAuthanticatedLayout';

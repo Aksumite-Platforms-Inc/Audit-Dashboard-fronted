@@ -13,6 +13,8 @@ export const auditData = [
         recommendations: 'Update systems, Implement standards',
         auditor: 'John Doe',
         auditDate: '2024-01-15',
+        lastUpdated: '2024-01-2',
+        completion: '22',
     },
     {
         id: 2,
@@ -25,6 +27,8 @@ export const auditData = [
         recommendations: 'Increase resources, Improve training',
         auditor: 'Jane Smith',
         auditDate: '2024-02-10',
+        lastUpdated: '2024-01-2',
+        completion: '22',
     },
     {
         id: 3,
@@ -37,6 +41,8 @@ export const auditData = [
         recommendations: 'Develop and enforce policies',
         auditor: 'Emily Johnson',
         auditDate: '2024-03-05',
+        lastUpdated: '2024-01-2',
+        completion: '22',
     },
 ];
 

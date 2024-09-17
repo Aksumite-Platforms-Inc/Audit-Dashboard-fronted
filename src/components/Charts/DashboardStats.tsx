@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { fetchGovernmentAudits, fetchPrivateAudits, parseJwt } from '../../api/AuditApi';
+
+
+// Removed unused interface PriAuditData
 
 const CardDataStats = ({
   title,
@@ -25,9 +29,8 @@ const CardDataStats = ({
         </div>
         <div className="flex items-center">
           <span
-            className={`text-base font-medium ${
-              levelUp ? 'text-green-500' : levelDown ? 'text-red-500' : 'text-gray-500'
-            }`}
+            className={`text-base font-medium ${levelUp ? 'text-green-500' : levelDown ? 'text-red-500' : 'text-gray-500'
+              }`}
           >
             {rate}
           </span>
@@ -38,34 +41,7 @@ const CardDataStats = ({
   );
 };
 
-interface GovAuditData {
-  id: number;
-  organization: string;
-  organizationType: string;
-  auditType: string;
-  riskLevel: string;
-  findings: string;
-  recommendations: string;
-  auditor: string;
-  date: string; // ISO date string
-  governmentType: string;
-}
-interface PriAuditData {
-    id: number;
-    organization: string;
-    organizationType: string;
-    auditType: string;
-    riskLevel: string;
-    findings: string;
-    recommendations: string;
-    auditor: string;
-    date: string; // ISO date string
-    privateType: string;
-  }
-
 const DashboardStats = () => {
-  const [govauditData, setgovAuditData] = useState<GovAuditData[]>([]);
-  const [priauditData, setpriAuditData] = useState<PriAuditData[]>([]);
   const [governmentCount, setGovernmentCount] = useState(0);
   const [privateCount, setPrivateCount] = useState(0); // New state for counting government audits
   const [loading, setLoading] = useState(true);
@@ -82,40 +58,20 @@ const DashboardStats = () => {
       }
 
       try {
-        const parseJwt = (token: string) => {
-          const base64Url = token.split('.')[1];
-          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-          const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-          }).join(''));
-        
-          return JSON.parse(jsonPayload);
-        };
-
         const role = parseJwt(token).role;
         if (role !== 'ADMIN') {
           console.error('Unauthorized: User does not have ADMIN role');
           return;
         }
-        const response = await axios.get('http://localhost:8081/api/governmentaudits/getall', {
-          headers: {
-            'Authorization': `Bearer ${token}` // Include the token in the request headers
-          }
-        });
-        const priresponse = await axios.get('http://localhost:8081/api/privateaudits/getall', {
-            headers: {
-              'Authorization': `Bearer ${token}` // Include the token in the request headers
-            }
-          });
-        
 
+        const governmentAudits = await fetchGovernmentAudits(token);
+        const privateAudits = await fetchPrivateAudits(token);
 
-        console.log(response.data);
-        // Assuming governmentCount is derived from response data
-        setGovernmentCount(response.data.length); // Adjust according to your response structure
-        setPrivateCount(priresponse.data.length);
-        setgovAuditData(response.data);
-        setpriAuditData(priresponse.data);
+        console.log(governmentAudits);
+        console.log(privateAudits);
+
+        setGovernmentCount(governmentAudits.length);
+        setPrivateCount(privateAudits.length);
         setLoading(false);
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -129,7 +85,7 @@ const DashboardStats = () => {
             console.error('Error message:', error.message);
           }
         } else if (error instanceof Error) {
-          console.error('Error fetching government audits:', error.message);
+          console.error('Error fetching audits:', error.message);
         } else {
           console.error('An unknown error occurred:', error);
         }
@@ -145,35 +101,33 @@ const DashboardStats = () => {
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-      
-        <CardDataStats  title="Total Audits" total={privateCount + governmentCount} rate="+5%" levelUp levelDown={false}>
-          <svg
-            className="fill-primary dark:fill-white"
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M2.75 5.5C2.75 4.25736 3.75736 3.25 5 3.25H17C18.2426 3.25 19.25 4.25736 19.25 5.5V16.5C19.25 17.7426 18.2426 18.75 17 18.75H5C3.75736 18.75 2.75 17.7426 2.75 16.5V5.5Z"
-              fill="currentColor"
-            />
-            <path
-              d="M7.75 7.25H8.25C8.66421 7.25 9 7.58579 9 8V14C9 14.4142 8.66421 14.75 8.25 14.75H7.75C7.33579 14.75 7 14.4142 7 14V8C7 7.58579 7.33579 7.25 7.75 7.25Z"
-              fill="white"
-            />
-            <path
-              d="M11.25 10.25H11.75C12.1642 10.25 12.5 10.5858 12.5 11V14C12.5 14.4142 12.1642 14.75 11.75 14.75H11.25C10.8358 14.75 10.5 14.4142 10.5 14V11C10.5 10.5858 10.8358 10.25 11.25 10.25Z"
-              fill="white"
-            />
-            <path
-              d="M14.75 6.25H15.25C15.6642 6.25 16 6.58579 16 7V14C16 14.4142 15.6642 14.75 15.25 14.75H14.75C14.3358 14.75 14 14.4142 14 14V7C14 6.58579 14.3358 6.25 14.75 6.25Z"
-              fill="white"
-            />
-          </svg>
-        </CardDataStats>
-    
+      <CardDataStats title="Total Audits" total={privateCount + governmentCount} rate="+5%" levelUp levelDown={false}>
+        <svg
+          className="fill-primary dark:fill-white"
+          width="28"
+          height="28"
+          viewBox="0 0 28 28"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M2.75 5.5C2.75 4.25736 3.75736 3.25 5 3.25H17C18.2426 3.25 19.25 4.25736 19.25 5.5V16.5C19.25 17.7426 18.2426 18.75 17 18.75H5C3.75736 18.75 2.75 17.7426 2.75 16.5V5.5Z"
+            fill="currentColor"
+          />
+          <path
+            d="M7.75 7.25H8.25C8.66421 7.25 9 7.58579 9 8V14C9 14.4142 8.66421 14.75 8.25 14.75H7.75C7.33579 14.75 7 14.4142 7 14V8C7 7.58579 7.33579 7.25 7.75 7.25Z"
+            fill="white"
+          />
+          <path
+            d="M11.25 10.25H11.75C12.1642 10.25 12.5 10.5858 12.5 11V14C12.5 14.4142 12.1642 14.75 11.75 14.75H11.25C10.8358 14.75 10.5 14.4142 10.5 14V11C10.5 10.5858 10.8358 10.25 11.25 10.25Z"
+            fill="white"
+          />
+          <path
+            d="M14.75 6.25H15.25C15.6642 6.25 16 6.58579 16 7V14C16 14.4142 15.6642 14.75 15.25 14.75H14.75C14.3358 14.75 14 14.4142 14 14V7C14 6.58579 14.3358 6.25 14.75 6.25Z"
+            fill="white"
+          />
+        </svg>
+      </CardDataStats>
 
       {/* Card for Government Audits */}
       <CardDataStats
@@ -198,7 +152,7 @@ const DashboardStats = () => {
         </svg>
       </CardDataStats>
 
-      <CardDataStats title="Private Audits"  total={privateCount}  rate="-2%" levelUp={false} levelDown>
+      <CardDataStats title="Private Audits" total={privateCount} rate="-2%" levelUp={false} levelDown>
         {/* Your SVG content */}
       </CardDataStats>
 

@@ -19,6 +19,8 @@ const SignIn: React.FC = () => {
     try {
       const token = await loginUser(email, password);
       login(token);
+      localStorage.setItem('token', token);
+
 
       const role = parseJwt(token).role;
       if (role === 'ADMIN') {

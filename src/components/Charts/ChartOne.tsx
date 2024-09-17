@@ -1,6 +1,7 @@
 import { ApexOptions } from 'apexcharts';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import axios from 'axios';
 
 const options: ApexOptions = {
   legend: {
@@ -45,7 +46,7 @@ const options: ApexOptions = {
   ],
   stroke: {
     width: [2, 2],
-    curve: 'straight',
+    curve: 'smooth',
   },
   grid: {
     xaxis: {
@@ -70,9 +71,7 @@ const options: ApexOptions = {
   },
   xaxis: {
     type: 'category',
-    categories: [
-      'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
-    ],
+    categories: [], // This will be set dynamically
     axisBorder: {
       show: false,
     },
@@ -96,21 +95,154 @@ interface ChartOneState {
     name: string;
     data: number[];
   }[];
+  categories: string[];
+}
+interface GovAuditData {
+  id: number;
+  organization: string;
+  organizationType: string;
+  auditType: string;
+  riskLevel: string;
+  findings: string;
+  recommendations: string;
+  auditor: string;
+  date: string; // ISO date string
+  governmentType: string;
+}
+interface PriAuditData {
+  id: number;
+  organization: string;
+  organizationType: string;
+  auditType: string;
+  riskLevel: string;
+  findings: string;
+  recommendations: string;
+  auditor: string;
+  date: string; // ISO date string
+  privateType: string;
 }
 
 const ChartOne: React.FC = () => {
-  const [state] = useState<ChartOneState>({
+  const [state, setState] = useState<ChartOneState>({
     series: [
       {
         name: 'Private Audits',
-        data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 45],
+        data: [],
       },
       {
         name: 'Government Audits',
-        data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51],
+        data: [],
       },
     ],
+    categories: [],
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem('token');
+      console.log(token);
+
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      try {
+        const parseJwt = (token: string) => {
+          const base64Url = token.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join(''));
+
+          return JSON.parse(jsonPayload);
+        };
+
+        const role = parseJwt(token).role;
+        if (role !== 'ADMIN') {
+          console.error('Unauthorized: User does not have ADMIN role');
+          return;
+        }
+
+        const response = await axios.get('http://localhost:8081/api/governmentaudits/getall', {
+          headers: {
+            'Authorization': `Bearer ${token}` // Include the token in the request headers
+          }
+        });
+        const priresponse = await axios.get('http://localhost:8081/api/privateaudits/getall', {
+          headers: {
+            'Authorization': `Bearer ${token}` // Include the token in the request headers
+          }
+        });
+
+        console.log(response.data);
+        console.log(priresponse.data);
+
+        // Function to extract year and month from date string
+        const getYearAndMonth = (dateStr: string) => {
+          const date = new Date(dateStr);
+          return { year: date.getFullYear(), month: date.getMonth() };
+        };
+
+        // Function to get years range and format data
+        const processData = (data: GovAuditData[] | PriAuditData[]) => {
+          const monthCounts: number[] = Array(12).fill(0);
+          const years: Set<number> = new Set();
+
+          data.forEach((item) => {
+            const { year, month } = getYearAndMonth(item.date);
+            years.add(year);
+            monthCounts[month] += 1;
+          });
+
+          const yearArray = Array.from(years).sort((a, b) => a - b);
+          const categories = yearArray.map(year => year.toString());
+
+          return {
+            monthCounts,
+            categories,
+          };
+        };
+
+        const govData = processData(response.data);
+        const priData = processData(priresponse.data);
+
+        setState({
+          series: [
+            {
+              name: 'Private Audits',
+              data: priData.monthCounts,
+            },
+            {
+              name: 'Government Audits',
+              data: govData.monthCounts,
+            },
+          ],
+          categories: govData.categories,
+        });
+
+        //options.xaxis.categories = state.categories; // Update x-axis categories dynamically
+
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          if (error.response) {
+            console.error('Error response:', error.response.data);
+            console.error('Error status:', error.response.status);
+          } else if (error.request) {
+            console.error('Error request:', error.request);
+          } else {
+            console.error('Error message:', error.message);
+          }
+        } else if (error instanceof Error) {
+          console.error('Error fetching audits:', error.message);
+        } else {
+          console.error('An unknown error occurred:', error);
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
@@ -122,7 +254,7 @@ const ChartOne: React.FC = () => {
             </span>
             <div className="w-full">
               <p className="font-semibold text-primary">Private Audits</p>
-              <p className="text-sm font-medium">12.04.2023 - 12.05.2023</p>
+              {/* <p className="text-sm font-medium">12.04.2023 - 12.05.2023</p> */}
             </div>
           </div>
           <div className="flex min-w-47.5">
@@ -131,7 +263,7 @@ const ChartOne: React.FC = () => {
             </span>
             <div className="w-full">
               <p className="font-semibold text-secondary">Government Audits</p>
-              <p className="text-sm font-medium">12.04.2023 - 12.05.2023</p>
+              {/* <p className="text-sm font-medium">12.04.2023 - 12.05.2023</p> */}
             </div>
           </div>
         </div>

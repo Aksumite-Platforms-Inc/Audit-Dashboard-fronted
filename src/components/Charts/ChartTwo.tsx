@@ -1,6 +1,7 @@
 import { ApexOptions } from 'apexcharts';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import axios from 'axios';
 
 const options: ApexOptions = {
   colors: ['#3C50E0', '#80CAEE'],
@@ -42,7 +43,7 @@ const options: ApexOptions = {
     enabled: false,
   },
   xaxis: {
-    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    categories: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
   },
   legend: {
     position: 'top',
@@ -66,26 +67,135 @@ interface ChartTwoState {
   }[];
 }
 
+interface AuditData {
+  id: number;
+  organization: string;
+  organizationType: string;
+  auditType: string;
+  auditStatus: string;
+  riskLevel: string;
+  findings: string;
+  recommendations: string;
+  auditor: string;
+  date: string; // ISO date string
+}
+
 const ChartTwo: React.FC = () => {
   const [state, setState] = useState<ChartTwoState>({
     series: [
       {
         name: 'Completed Audits',
-        data: [44, 55, 41, 67, 22, 43, 65],
+        data: [0, 0, 0, 0, 0, 0, 0], // Placeholder data
       },
       {
         name: 'Pending Audits',
-        data: [13, 23, 20, 8, 13, 27, 15],
+        data: [0, 0, 0, 0, 0, 0, 0], // Placeholder data
       },
     ],
   });
 
-  const handleReset = () => {
-    setState((prevState) => ({
-      ...prevState,
-    }));
-  };
-  handleReset;
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      try {
+        const parseJwt = (token: string) => {
+          const base64Url = token.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join(''));
+        
+          return JSON.parse(jsonPayload);
+        };
+
+        const role = parseJwt(token).role;
+        if (role !== 'ADMIN') {
+          console.error('Unauthorized: User does not have ADMIN role');
+          return;
+        }
+
+        const responseGov = await axios.get('http://localhost:8081/api/governmentaudits/getall', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const responsePri = await axios.get('http://localhost:8081/api/privateaudits/getall', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const govData: AuditData[] = responseGov.data;
+        const priData: AuditData[] = responsePri.data;
+
+        console.log('Government Data:', govData);
+        console.log('Private Data:', priData);
+
+        // Extract current week's start and end dates
+        const today = new Date();
+        const firstDayOfWeek = today.getDate() - today.getDay(); // Sunday
+        const lastDayOfWeek = firstDayOfWeek + 6; // Saturday
+        const weekStart = new Date(today.setDate(firstDayOfWeek)).toISOString().split('T')[0];
+        const weekEnd = new Date(today.setDate(lastDayOfWeek)).toISOString().split('T')[0];
+
+        console.log('Week Start:', weekStart);
+        console.log('Week End:', weekEnd);
+
+        // Count audits by status for each day of the week
+        const getCountByDay = (data: AuditData[], status: string) => {
+          const counts = Array(7).fill(0); // Initialize counts for each day of the week
+
+          data.forEach((item) => {
+            const date = new Date(item.date);
+            if (date >= new Date(weekStart) && date <= new Date(weekEnd)) {
+              const dayIndex = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
+              if (item.auditStatus === status) {
+                counts[dayIndex] += 1;
+              }
+            }
+          });
+
+          return counts;
+        };
+
+        const completedCounts = getCountByDay(govData, 'Completed');
+        const pendingCounts = getCountByDay(priData, 'Pending');
+
+        console.log('Completed Counts:', completedCounts);
+        console.log('Pending Counts:', pendingCounts);
+
+        setState({
+          series: [
+            {
+              name: 'Completed Audits',
+              data: completedCounts,
+            },
+            {
+              name: 'Pending Audits',
+              data: pendingCounts,
+            },
+          ],
+        });
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('Error response:', error.response?.data);
+          console.error('Error status:', error.response?.status);
+        } else if (error instanceof Error) {
+          console.error('Error fetching audits:', error.message);
+        } else {
+          console.error('An unknown error occurred:', error);
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">

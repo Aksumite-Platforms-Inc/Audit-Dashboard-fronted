@@ -17,6 +17,7 @@ import AuditProjects from './pages/Audit/ManageAuditProjects';
 import AuditAssignments from './pages/Audit/AuditAssignments';
 import AuditSettings from './pages/Audit/AuditSetting'; // Adjust the path as needed
 import Admin from './pages/Admin/Admin';
+import AddUser from './pages/Admin/AddUser';
 import { useAuth } from './context/AuthContext'; // Assuming you have an AuthContext
 
 function App() {
@@ -44,6 +45,8 @@ function App() {
           element={
             <AuthenticatedLayout>
               <Routes>
+              
+                <Route path="/add-user" element={<AddUser />} />
                 <Route path="/audit/new" element={<NewAudit />} />
                 <Route path="/audit/projects" element={<AuditProjects />} />
                 <Route path="/audit/assignments" element={<AuditAssignments />} />

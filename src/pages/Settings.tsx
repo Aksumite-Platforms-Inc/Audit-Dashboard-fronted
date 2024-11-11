@@ -176,6 +176,7 @@ const Settings = () => {
                 type="file"
                 accept="image/*"
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                title="Upload your profile photo"
               />
               <div className="flex flex-col items-center">
                 <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center border border-stroke dark:border-strokedark">
@@ -196,7 +197,9 @@ const Settings = () => {
                   <span className="text-primary">Click to upload</span> or drag
                   and drop
                 </p>
-                <p className="mt-1 text-xs">SVG, PNG, JPG or GIF (max, 800 X 800px)</p>
+                <p className="mt-1 text-xs">
+                  SVG, PNG, JPG or GIF (max, 800 X 800px)
+                </p>
               </div>
             </div>
 
